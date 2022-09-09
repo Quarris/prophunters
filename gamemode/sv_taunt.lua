@@ -9,7 +9,7 @@ concommand.Add("ph_taunt", function (ply, com, args, full)
 
 	if !ply:Alive() then return end
 
-	if ply.Taunting && ply.Taunting > CurTime() then
+	if ply.Taunting and ply.Taunting > CurTime() then
 		return
 	end
 
@@ -20,11 +20,11 @@ concommand.Add("ph_taunt", function (ply, com, args, full)
 
 	local t
 	for k, v in pairs(AllowedTauntSounds[snd]) do
-		if v.sex && v.sex != ply.ModelSex then
+		if v.sex and v.sex ~= ply.ModelSex then
 			continue
 		end
 
-		if v.team && v.team != ply:Team() then
+		if v.team and v.team ~= ply:Team() then
 			continue
 		end
 
@@ -52,17 +52,17 @@ concommand.Add("ph_taunt_random", function (ply, com, args, full)
 
 	if !ply:Alive() then return end
 
-	if ply.Taunting && ply.Taunting > CurTime() then
+	if ply.Taunting and ply.Taunting > CurTime() then
 		return
 	end
 
 	local potential = {}
 	for k, v in pairs(Taunts) do
-		if v.sex && v.sex != ply.ModelSex then
+		if v.sex and v.sex ~= ply.ModelSex then
 			continue
 		end
 
-		if v.team && v.team != ply:Team() then
+		if v.team and v.team ~= ply:Team() then
 			continue
 		end
 

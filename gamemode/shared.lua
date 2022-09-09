@@ -1,8 +1,8 @@
 GM.Name 	= "Prophunters"
 GM.Author 	= "MechanicalMind"
-// Credits to waddlesworth for the logo and icon
+-- Credits to waddlesworth for the logo and icon
 GM.Email 	= ""
-GM.Website 	= "http://codingconcoctions.com/"
+GM.Website 	= "http:--codingconcoctions.com/"
 GM.Version 	= "1.4"
 
 team.SetUp(1, "Spectators", Color(120, 120, 120))
@@ -36,6 +36,6 @@ function GM:PlayerSetHull(ply, hullx, hully, hullz, duckz)
 		net.WriteFloat(hullz)
 		net.WriteFloat(duckz)
 		net.Broadcast()
-		// TODO send on player spawn
+		-- TODO send on player spawn
 	end
 end

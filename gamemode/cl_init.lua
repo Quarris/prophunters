@@ -37,7 +37,7 @@ end
 
 function GM:PostDrawViewModel( vm, ply, weapon )
 
-	if ( weapon.UseHands || !weapon:IsScripted() ) then
+	if ( weapon.UseHands or !weapon:IsScripted() ) then
 
 		local hands = LocalPlayer():GetHands()
 		if ( IsValid( hands ) ) then hands:DrawModel() end
@@ -50,7 +50,7 @@ function GM:RenderScene( origin, angles, fov )
 	local client = LocalPlayer()
 	if IsValid(client) then
 		local wep = client:GetActiveWeapon()
-		if IsValid(wep) && wep.PostDrawTranslucentRenderables then
+		if IsValid(wep) and wep.PostDrawTranslucentRenderables then
 			local errored, retval = pcall(wep.PostDrawTranslucentRenderables, wep)
 			if !errored then
 				print( retval )
@@ -89,20 +89,20 @@ end
 
 local camDis, camHeight = 0,0 
 function GM:CalcView(ply, pos, angles, fov)
-	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) then
+	if self:IsCSpectating() and IsValid(self:GetCSpectatee()) then
 		ply = self:GetCSpectatee()
 	end
-	if ply:IsPlayer() && !ply:Alive() then
+	if ply:IsPlayer() and !ply:Alive() then
 		ply = ply:GetRagdollEntity()
 	end
 	if IsValid(ply) then
-		if ply:IsPlayer() && ply:IsDisguised() then
+		if ply:IsPlayer() and ply:IsDisguised() then
 			local maxs = ply:GetNWVector("disguiseMaxs")
 			local mins = ply:GetNWVector("disguiseMins")
 			local view = {}
 
 			local reach = (maxs.z - mins.z)
-			if self:GetRoundSettings() && self:GetRoundSettings().PropsCamDistance then
+			if self:GetRoundSettings() and self:GetRoundSettings().PropsCamDistance then
 				reach = reach * self:GetRoundSettings().PropsCamDistance
 			end
 			local trace = {}
@@ -178,7 +178,7 @@ net.Receive("player_model_sex", function ()
 end)
 
 function GM:StartChat()
-	if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
+	if IsValid(self.EndRoundPanel) and self.EndRoundPanel:IsVisible() then
 		timer.Simple(0, function () chat.Close() end)
 
 		self.EndRoundPanel:SetKeyboardInputEnabled(true)

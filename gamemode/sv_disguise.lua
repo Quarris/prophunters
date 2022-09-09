@@ -10,7 +10,7 @@ function GM:PlayerDisguise(ply)
 		if IsValid(tr.Entity) then
 			if tr.HitPos:Distance(tr.StartPos) < 100 then
 				if ply:CanDisguiseAsProp(tr.Entity) then
-					if ply.LastDisguise && ply.LastDisguise + 1 > CurTime() then
+					if ply.LastDisguise and ply.LastDisguise + 1 > CurTime() then
 						return
 					end
 					ply:DisguiseAsProp(tr.Entity)
@@ -38,8 +38,8 @@ function PlayerMeta:DisguiseAsProp(ent)
 	self:Flashlight(false)
 
 
-	// create an entity for the disguise
-	// we can't use a clientside entity as it needs a shadow
+	-- create an entity for the disguise
+	-- we can't use a clientside entity as it needs a shadow
 	local dent = self:GetNWEntity("disguiseEntity")
 	if !IsValid(dent) then
 		dent = ents.Create("ph_disguise")

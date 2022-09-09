@@ -8,9 +8,9 @@ end
 
 local function renderDis(self)
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Alive() && ply:IsDisguised() then
+		if ply:Alive() and ply:IsDisguised() then
 			local model = ply:GetNWString("disguiseModel")
-			if model && model != "" then
+			if model and model ~= "" then
 
 				local ent = ply:GetNWEntity("disguiseEntity")
 				if IsValid(ent) then
@@ -72,7 +72,7 @@ function GM:RenderDisguiseHalo()
 		end
 		local tab = {}
 		for k, ply in pairs(player.GetAll()) do
-			if ply != client && ply:Team() == 3 && ply:IsDisguised() then
+			if ply ~= client and ply:Team() == 3 and ply:IsDisguised() then
 				if IsValid(ply.PropMod) then
 					table.insert(tab, ply.PropMod)
 				end

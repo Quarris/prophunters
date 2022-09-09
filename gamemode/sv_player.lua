@@ -8,7 +8,7 @@ function GM:PlayerInitialSpawn(ply)
 
 	self:TeamsSetupPlayer(ply)
 
-	if self:GetGameState() != 0 then
+	if self:GetGameState() ~= 0 then
 		timer.Simple(0, function ()
 			if IsValid(ply) then
 				ply:KillSilent()
@@ -103,7 +103,7 @@ function GM:PlayerSetupHands(ply)
 end
 
 function PlayerMeta:CalculateSpeed()
-	// set the defaults
+	-- set the defaults
 	local settings = {
 		walkSpeed = 250,
 		runSpeed = 50,
@@ -113,7 +113,7 @@ function PlayerMeta:CalculateSpeed()
 		canJump = true
 	}
 
-	// speed penalty for small objects (popcan, small bottles, mouse, etc)
+	-- speed penalty for small objects (popcan, small bottles, mouse, etc)
 	if self:IsDisguised() then
 		if GAMEMODE.PropsSmallSize:GetFloat() > 0 then
 			local mul = math.Clamp(self:GetNWFloat("disguiseVolume", 1) / GAMEMODE.PropsSmallSize:GetFloat(), 0.5, 1)
@@ -128,13 +128,13 @@ function PlayerMeta:CalculateSpeed()
 	hook.Call("PlayerCalculateSpeed", ply, settings)
 
 
-	// set out new speeds
+	-- set out new speeds
 	if settings.canRun then
 		self:SetRunSpeed(settings.runSpeed or 1)
 	else
 		self:SetRunSpeed(settings.walkSpeed or 1)
 	end
-	if self:GetMoveType() != MOVETYPE_NOCLIP then
+	if self:GetMoveType() ~= MOVETYPE_NOCLIP then
 		if settings.canMove then
 			self:SetMoveType(MOVETYPE_WALK)
 		else
@@ -148,19 +148,21 @@ end
 
 function GM:PlayerLoadout(ply)
 	if ply:Team() == 2 then
-		ply:Give("weapon_crowbar")
-		ply:Give("weapon_smg1")
-		ply:Give("weapon_shotgun")
-
-		ply:GiveAmmo(45 * 10, "SMG1")
-		ply:GiveAmmo(6 * 10, "buckshot")
-		local amo = self.HunterGrenadeAmount:GetInt()
+		addWeapon(ply, "weapon_crowbar")
+		applyWeapons(ply)
+        local amo = self.HunterGrenadeAmount:GetInt()
 		if amo > 0 then
 			ply:GiveAmmo(amo, "SMG1_Grenade")
 		end
 	end
 end
 
+function addWeapon(ply, wpn, ammo_tp, ammo_amt) 
+   ply:Give(wpn)
+   if ammo_tp ~= nil then
+       ply:GiveAmmo(ammo_amt, ammo_tp)
+   end
+end
 
 local playerModels = {}
 local function addModel(model, sex)
@@ -248,7 +250,7 @@ function GM:PlayerSelectSpawn( pl )
 	local spawnPoints = {}
 
 
-	if pl:Team() == 3 then // props
+	if pl:Team() == 3 then -- props
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_terrorist" ) )
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_axis" ) )
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_combine" ) )
@@ -269,7 +271,7 @@ function GM:PlayerSelectSpawn( pl )
 
 	local Count = table.Count( spawnPoints )
 
-	if pl:Team() == 1 || Count == 0 then
+	if pl:Team() == 1 or Count == 0 then
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_start" ) )
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "gmod_player_start" ) ) -- (Old) GMod Maps
 		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_teamspawn" ) ) -- TF Maps
@@ -281,7 +283,7 @@ function GM:PlayerSelectSpawn( pl )
 	end
 
 
-	// recount
+	-- recount
 	local Count = table.Count( spawnPoints )
 	
 	if ( Count == 0 ) then
@@ -296,11 +298,11 @@ function GM:PlayerSelectSpawn( pl )
 	
 		ChosenSpawnPoint = table.Random( spawnPoints )
 
-		if ( ChosenSpawnPoint &&
-			ChosenSpawnPoint:IsValid() &&
-			ChosenSpawnPoint:IsInWorld() &&
-			ChosenSpawnPoint != pl:GetVar( "LastSpawnpoint" ) &&
-			ChosenSpawnPoint != self.LastSpawnPoint ) then
+		if ( ChosenSpawnPoint and
+			ChosenSpawnPoint:IsValid() and
+			ChosenSpawnPoint:IsInWorld() and
+			ChosenSpawnPoint ~= pl:GetVar( "LastSpawnpoint" ) and
+			ChosenSpawnPoint ~= self.LastSpawnPoint ) then
 			
 			if ( hook.Call( "IsSpawnpointSuitable", GAMEMODE, pl, ChosenSpawnPoint, i == Count ) ) then
 			
@@ -327,19 +329,19 @@ function GM:PlayerDeathThink(ply)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
-	if ply:IsDisguised() && ply:Team() == 3 then
+	if ply:IsDisguised() and ply:Team() == 3 then
 		ply:EmitSound("ambient/voices/f_scream1.wav")
 	end
 
-	// are they a prop
+	-- are they a prop
 	if ply:Team() == 3 then
 
-		// set the last death award
+		-- set the last death award
 		self.LastPropDeath = ply
 	end
 	ply:UnDisguise()
 
-	ply:Freeze(false) // why?, *sigh*
+	ply:Freeze(false) -- why?, *sigh*
 	
 	ply:CreateRagdoll()
 
@@ -350,19 +352,19 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 
 	ply:AddDeaths(1)
 
-	if IsValid(attacker) && attacker:IsPlayer() then
+	if IsValid(attacker) and attacker:IsPlayer() then
 		if attacker == ply then
 			attacker:AddFrags(-1)
 		else
 			attacker:AddFrags(1)
 
-			// did a hunter kill a prop
-			if attacker:Team() == 2 && ply:Team() == 3 then
+			-- did a hunter kill a prop
+			if attacker:Team() == 2 and ply:Team() == 3 then
 
-				// increase their round kills
+				-- increase their round kills
 				attacker.HunterKills = (attacker.HunterKills or 0) + 1
 
-				// set the first hunter kill award
+				-- set the first hunter kill award
 				if self.FirstHunterKill == nil then
 					self.FirstHunterKill = attacker
 				end
@@ -379,10 +381,10 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 	ply.NextSpawnTime = CurTime() + 1
 	ply.DeathTime = CurTime()
 
-	// time until player can spectate another player
+	-- time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
 
-	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
+	if IsValid(attacker) and attacker:IsPlayer() and attacker ~= ply then
 		attacker:AddMoney(100)
 	end
 end
@@ -458,8 +460,8 @@ end
 
 
 function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
-	if typ == "chat" && teamOnly then
-		if listener:Team() != talker:Team() then
+	if typ == "chat" and teamOnly then
+		if listener:Team() ~= talker:Team() then
 			return false
 		end
 	end
@@ -468,17 +470,17 @@ function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
 		return true
 	end
 	
-	if self:GetGameState() == 3 || self:GetGameState() == 0 then
+	if self:GetGameState() == 3 or self:GetGameState() == 0 then
 		return true
 	end
 
-	// spectators and dead players can hear everyone
-	if listener:Team() == 1 || !listener:Alive() then
+	-- spectators and dead players can hear everyone
+	if listener:Team() == 1 or !listener:Alive() then
 		return true
 	end
 
-	// if the player is dead or a spectator we can't hear them
-	if !talker:Alive() || talker:Team() == 1 then
+	-- if the player is dead or a spectator we can't hear them
+	if !talker:Alive() or talker:Team() == 1 then
 		return false
 	end
 

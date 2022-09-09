@@ -5,7 +5,7 @@ local allowClasses = {"prop_physics", "prop_physics_multiplayer"}
 
 function PlayerMeta:CanDisguiseAsProp(ent)
 	if !self:Alive() then return false end
-	if self:Team() != 3 then return false end
+	if self:Team() ~= 3 then return false end
 	if !IsValid(ent) then return false end
 
 	if !table.HasValue(allowClasses, ent:GetClass()) then

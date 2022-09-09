@@ -84,7 +84,7 @@ concommand.Add("ph_bannedmodels_menu", function (client)
 		local mx, my = gui.MousePos()
 		local sx, sy = self:LocalToScreen(0, 0)
 		local s
-		if mx >= sx + w - 16 - 4 && mx < sx + w - 4 then
+		if mx >= sx + w - 16 - 4 and mx < sx + w - 4 then
 			sx = mx - sx - 4
 			sy = my - sy - 4
 			s = math.floor(sy / 20)
@@ -111,7 +111,7 @@ concommand.Add("ph_bannedmodels_menu", function (client)
 		local mx, my = gui.MousePos()
 		local sx, sy = self:LocalToScreen(0, 0)
 		local s
-		if mx >= sx + w - 16 - 4 && mx < sx + w - 4 then
+		if mx >= sx + w - 16 - 4 and mx < sx + w - 4 then
 			sx = mx - sx - 4
 			sy = my - sy - 4
 			s = math.floor(sy / 20)

@@ -8,12 +8,12 @@ GM.GameState = GAMEMODE and GAMEMODE.GameState or 0
 GM.StateStart = GAMEMODE and GAMEMODE.StateStart or CurTime()
 GM.Rounds = GAMEMODE and GAMEMODE.Rounds or 0
 
-// STATES
-// 0 WAITING FOR PLAYERS
-// 1 STARTING ROUND
-// 2 PLAYING
-// 3 END GAME RESET TIME
-// 4 MAP VOTE
+-- STATES
+-- 0 WAITING FOR PLAYERS
+-- 1 STARTING ROUND
+-- 2 PLAYING
+-- 3 END GAME RESET TIME
+-- 4 MAP VOTE
 
 function GM:GetGameState()
 	return self.GameState
@@ -30,7 +30,7 @@ end
 function GM:GetPlayingPlayers()
 	local players = {}
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 && ply:GetNWBool("RoundInGame") then
+		if ply:Team() ~= 1 and ply:GetNWBool("RoundInGame") then
 			table.insert(players, ply)
 		end
 	end
@@ -77,7 +77,7 @@ end
 function GM:SetupRound()
 	local c = 0
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 then // ignore spectators
+		if ply:Team() ~= 1 then -- ignore spectators
 			c = c + 1
 		end
 	end
@@ -92,7 +92,7 @@ function GM:SetupRound()
 	self:BalanceTeams()
 
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 then // ignore spectators
+		if ply:Team() ~= 1 then -- ignore spectators
 			ply:SetNWBool("RoundInGame", true)
 			ply:KillSilent()
 			ply:Spawn()
@@ -135,7 +135,7 @@ function GM:StartRound()
 
 	local c = 0
 	for k, ent in pairs(ents.GetAll()) do
-		if ent.IsDisguisableAs && ent:IsDisguisableAs() then
+		if ent.IsDisguisableAs and ent:IsDisguisableAs() then
 			c = c + 1
 		end
 	end
@@ -185,40 +185,40 @@ function GM:EndRound(reason)
 	local tauntsPly, tauntsAmo = nil, 0
 	for k, ply in pairs(self:GetPlayingPlayers()) do
 
-		// TODO replace with better statistic tracker
+		-- TODO replace with better statistic tracker
 		ply.HunterKills = ply.HunterKills or 0
 		ply.PropDmgPenalty = ply.PropDmgPenalty or 0
 		ply.TauntAmount = ply.TauntAmount or 0
 		ply.PropMovement = ply.PropMovement or 0
 
-		if ply:Team() == 2 then // hunters
+		if ply:Team() == 2 then -- hunters
 
-			// get hunter with most prop damage
+			-- get hunter with most prop damage
 			if ply.PropDmgPenalty > propDmg then
 				propDmg = ply.PropDmgPenalty
 				propPly = ply
 			end
 
-			// get hunter with most kills
+			-- get hunter with most kills
 			if ply.HunterKills > killsAmo then
 				killsAmo = ply.HunterKills
 				killsPly = ply
 			end
 		else
 
-			// get prop with least movement
-			if leastMoveAmo == nil || ply.PropMovement < leastMoveAmo then
+			-- get prop with least movement
+			if leastMoveAmo == nil or ply.PropMovement < leastMoveAmo then
 				leastMoveAmo = ply.PropMovement
 				leastMovePly = ply
 			end
 			
-			// get prop with most movement
-			if mostMoveAmo == nil || ply.PropMovement > mostMoveAmo then
+			-- get prop with most movement
+			if mostMoveAmo == nil or ply.PropMovement > mostMoveAmo then
 				mostMoveAmo = ply.PropMovement
 				mostMovePly = ply
 			end
 
-			// get prop with most taunts
+			-- get prop with most taunts
 			if ply.TauntAmount > tauntsAmo then
 				tauntsAmo = ply.TauntAmount
 				tauntsPly = ply
@@ -246,12 +246,12 @@ function GM:EndRound(reason)
 		self.PlayerAwards["MostTaunts"] = tauntsPly
 	end
 
-	// last prop death award
-	if IsValid(self.LastPropDeath) && reason == 2 then
+	-- last prop death award
+	if IsValid(self.LastPropDeath) and reason == 2 then
 		self.PlayerAwards["LastPropStanding"] = self.LastPropDeath
 	end
 
-	// first hunter kill award
+	-- first hunter kill award
 	if IsValid(self.FirstHunterKill) then
 		self.PlayerAwards["FirstHunterKill"] = self.FirstHunterKill
 	end
@@ -285,10 +285,10 @@ function GM:EndRound(reason)
 end
 
 function GM:RoundsSetupPlayer(ply)
-	// start off not participating
+	-- start off not participating
 	ply:SetNWBool("RoundInGame", false)
 
-	// send game state
+	-- send game state
 	self:NetworkGameState(ply)
 end
 
@@ -310,7 +310,7 @@ function GM:CheckForVictory()
 			end
 		end
 	end
-	if red == 0 && blue == 0 then
+	if red == 0 and blue == 0 then
 		self:EndRound(1)
 		return
 	end
@@ -329,11 +329,11 @@ function GM:RoundsThink()
 	if self:GetGameState() == 0 then
 		local c = 0
 		for k, ply in pairs(player.GetAll()) do
-			if ply:Team() != 1 then // ignore spectators
+			if ply:Team() ~= 1 then -- ignore spectators
 				c = c + 1
 			end
 		end
-		if c >= 2 && self.RoundWaitForPlayers + self.StartWaitTime:GetFloat() < CurTime() then
+		if c >= 2 and self.RoundWaitForPlayers + self.StartWaitTime:GetFloat() < CurTime() then
 			self:SetupRound()
 		end
 	elseif self:GetGameState() == 1 then
@@ -350,10 +350,10 @@ function GM:RoundsThink()
 		end
 	elseif self:GetGameState() == 3 then
 		if self:GetStateRunningTime() > (self.RoundSettings.NextRoundTime or 30) then
-			if self.RoundLimit:GetInt() > 0 && self.Rounds >= self.RoundLimit:GetInt() then
+			if self.RoundLimit:GetInt() > 0 and self.Rounds >= self.RoundLimit:GetInt() then
 				self:StartMapVote()
 			else
-				if self.LastRoundResult != 3 || !self.PropsWinStayProps:GetBool() then
+				if self.LastRoundResult ~= 3 or !self.PropsWinStayProps:GetBool() then
 					self:SwapTeams()
 				end
 				self:SetupRound()

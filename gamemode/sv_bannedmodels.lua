@@ -22,7 +22,7 @@ function GM:GetBannedModels()
 end
 
 function GM:SaveBannedModels()
-	// ensure the folders are there
+	-- ensure the folders are there
 	if !file.Exists("prophunters/","DATA") then
 		file.CreateDir("prophunters")
 	end
@@ -44,8 +44,8 @@ function GM:LoadBannedModels()
 		self.BannedModels = tbl
 	else
 
-		// don't touch this
-		// use ph_bannedmodels_menu or edit data/prophunters/bannedmodels.txt
+		-- don't touch this
+		-- use ph_bannedmodels_menu or edit data/prophunters/bannedmodels.txt
 		self.BannedModels = {
 			"models/props/cs_assault/money.mdl",
 			"models/props/cs_office/computer_mouse.mdl",
@@ -56,7 +56,7 @@ end
 
 function GM:RemoveBannedModelProps()
 	for k, ent in pairs(ents.GetAll()) do
-		if IsValid(ent) && ent:IsDisguisableAs() then
+		if IsValid(ent) and ent:IsDisguisableAs() then
 			if self:IsModelBanned(ent:GetModel()) then
 				ent:Remove()
 			end
@@ -65,7 +65,7 @@ function GM:RemoveBannedModelProps()
 end
 
 net.Receive("ph_bannedmodels", function (len, ply)
-	if ply.BannedAntiSpam && ply.BannedAntiSpam > CurTime() then return end
+	if ply.BannedAntiSpam and ply.BannedAntiSpam > CurTime() then return end
 	ply.BannedAntiSpam = CurTime() + 0.1
 
 	net.Start("ph_bannedmodels")

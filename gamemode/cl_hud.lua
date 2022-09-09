@@ -69,12 +69,12 @@ function GM:DrawGameHUD()
 	end
 
 	local ply = LocalPlayer()
-	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) && self:GetCSpectatee():IsPlayer() then
+	if self:IsCSpectating() and IsValid(self:GetCSpectatee()) and self:GetCSpectatee():IsPlayer() then
 		ply = self:GetCSpectatee()
 	end
 	self:DrawHealth(ply)
 
-	if ply != LocalPlayer() then
+	if ply ~= LocalPlayer() then
 		local col = ply:GetPlayerColor()
 		col = Color(col.r * 255, col.y * 255, col.z * 255)
 		draw.ShadowText(ply:Nick(), "RobotoHUD-30", ScrW() / 2, ScrH() - 4, col, 1, 4)
@@ -84,16 +84,16 @@ function GM:DrawGameHUD()
 	local tr = ply:GetEyeTraceNoCursor()
 
 	local shouldDraw = hook.Run("HUDShouldDraw", "PropHuntersPlayerNames")
-	if shouldDraw != false then
-		// draw names
-		if IsValid(tr.Entity) && tr.Entity:IsPlayer() && tr.HitPos:Distance(tr.StartPos) < 500 then
-			// hunters can only see their teams names
-			if ply:Team() != 2 || ply:Team() == tr.Entity:Team() then
+	if shouldDraw ~= false then
+		-- draw names
+		if IsValid(tr.Entity) and tr.Entity:IsPlayer() and tr.HitPos:Distance(tr.StartPos) < 500 then
+			-- hunters can only see their teams names
+			if ply:Team() ~= 2 or ply:Team() == tr.Entity:Team() then
 				self.LastLooked = tr.Entity
 				self.LookedFade = CurTime()
 			end
 		end
-		if IsValid(self.LastLooked) && self.LookedFade + 2 > CurTime() then
+		if IsValid(self.LastLooked) and self.LookedFade + 2 > CurTime() then
 			local name = self.LastLooked:Nick() or "error"
 			local col = self.LastLooked:GetPlayerColor() or Vector()
 			col = Color(col.x * 255, col.y * 255, col.z * 255)
@@ -106,7 +106,7 @@ function GM:DrawGameHUD()
 	local help 
 	if LocalPlayer():Alive() then
 		if LocalPlayer():Team() == 3 then
-			if self:GetGameState() == 1 || (self:GetGameState() == 2 && !LocalPlayer():IsDisguised()) then
+			if self:GetGameState() == 1 or (self:GetGameState() == 2 and !LocalPlayer():IsDisguised()) then
 				help = helpKeysProps
 			end
 		end
@@ -249,7 +249,7 @@ function GM:DrawHealth(ply)
 		
 		cam.IgnoreZ( false )
 
-	if ply:IsDisguised() && ply:DisguiseRotationLocked() then
+	if ply:IsDisguised() and ply:DisguiseRotationLocked() then
 		local fg = draw.GetFontHeight("RobotoHUD-15")
 		draw.ShadowText("ROTATION", "RobotoHUD-15", x + w + 20, y + h / 2 - fg / 2, color_white, 0, 1)
 		draw.ShadowText("LOCK", "RobotoHUD-15", x + w + 20, y + h / 2 + fg / 2, color_white, 0, 1)
@@ -280,7 +280,7 @@ function GM:DrawMoney()
 	surface.DrawText("$")
 
 	local mone = self:GetMoney()
-	if GAMEMODE.MoneyNotifTime && GAMEMODE.MoneyNotifTime + 3 > CurTime() then
+	if GAMEMODE.MoneyNotifTime and GAMEMODE.MoneyNotifTime + 3 > CurTime() then
 		local add = "+" .. GAMEMODE.MoneyNotif
 		mone = mone - GAMEMODE.MoneyNotif
 		draw.ShadowText(add, "RobotoHUD-20", x + w + gap + 16, y + h / 2 - th / 2)
@@ -308,7 +308,7 @@ function GM:HUDShouldDraw(name)
 	if name == "CHudVoiceSelfStatus" then return false end
 	-- if name == "CHudAmmo" then return false end
 	if name == "CHudChat" then
-		if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
+		if IsValid(self.EndRoundPanel) and self.EndRoundPanel:IsVisible() then
 			return false
 		end
 	end

@@ -71,7 +71,7 @@ local function openHelpScreen()
 		function catlist:Paint(w, h)
 		end
 
-		// child positioning
+		-- child positioning
 		local canvas = catlist:GetCanvas()
 		canvas:DockPadding(0, 0, 0, 0)
 		function canvas:OnChildAdded( child )
@@ -124,7 +124,7 @@ local function openHelpScreen()
 			surface.DrawRect(1, 1, w - 2, h - 2)
 		end
 
-		// child positioning
+		-- child positioning
 		local canvas = textscroll:GetCanvas()
 		canvas:DockPadding(0, 0, 0, 0)
 		function canvas:OnChildAdded( child )

@@ -46,7 +46,7 @@ function SWEP:GetTrace(left, up)
 	end
 	local vec = ang:Forward()
 	trace.endpos = trace.start + vec * 60
-	//trace.mask = MASK_SHOT
+	--trace.mask = MASK_SHOT
 	local tr = util.TraceLine(trace)
 	tr.TraceAimVector = vec
 	tr.LeftUp = Vector(left or 0, up or 0, 0)
@@ -56,7 +56,7 @@ end
 
 function SWEP:PrimaryAttack()	
 	if self.FistCanAttack then return end
-	if self.IdleTime && self.IdleTime > CurTime() then return end
+	if self.IdleTime and self.IdleTime > CurTime() then return end
 	self.FistCanAttack = CurTime() + self.Primary.Delay
 	self.Owner:SetAnimation( PLAYER_ATTACK1 )
 	self:SendWeaponAnim( ACT_VM_MISSCENTER )
@@ -69,12 +69,12 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Think()
-	if self.FistCanAttack && self.FistCanAttack < CurTime() then
+	if self.FistCanAttack and self.FistCanAttack < CurTime() then
 		self.FistCanAttack = nil
 		self:SendWeaponAnim( ACT_VM_IDLE )
 		self.IdleTime = CurTime() + 0.1
 	end	
-	if self.FistHit && self.FistHit < CurTime() then
+	if self.FistHit and self.FistHit < CurTime() then
 		self.FistHit = nil
 		self:AttackTrace()
 	end
@@ -92,7 +92,7 @@ function SWEP:AttackTrace()
 	local tr = util.TraceHull(trace)
 	tr.TraceAimVector = self.Owner:GetAimVector()
 
-	// aim around
+	-- aim around
 	if !IsValid(tr.Entity) then tr = self:GetTrace() end
 	if !IsValid(tr.Entity) then tr = self:GetTrace(10,0) end
 	if !IsValid(tr.Entity) then tr = self:GetTrace(-10,0) end
@@ -101,8 +101,8 @@ function SWEP:AttackTrace()
 	if tr.Hit then
 		self.Owner:ViewPunch(Angle(0, 3, 0))
 		if IsValid(tr.Entity) then
-			// only play the sound for the murderer
-			if CLIENT && LocalPlayer() == self.Owner then
+			-- only play the sound for the murderer
+			if CLIENT and LocalPlayer() == self.Owner then
 				self:EmitSound("Weapon_Crowbar.Melee_Hit")
 			end
 			local dmg = DamageInfo()
@@ -114,7 +114,7 @@ function SWEP:AttackTrace()
 			dmg:SetDamageType(DMG_SLASH)
 			tr.Entity:DispatchTraceAttack(dmg, self.Owner:GetShootPos(), self.Owner:GetShootPos() + tr.TraceAimVector * 60)
 
-			if tr.Entity:IsPlayer() || tr.Entity:GetClass() == "prop_ragdoll" then
+			if tr.Entity:IsPlayer() or tr.Entity:GetClass() == "prop_ragdoll" then
 				local edata = EffectData()
 				edata:SetStart(self.Owner:GetShootPos())
 				edata:SetOrigin(tr.HitPos)
@@ -127,8 +127,8 @@ function SWEP:AttackTrace()
 		end
 		util.Decal("ManhackCut", self.Owner:GetShootPos(), self.Owner:GetShootPos() + self.Owner:GetAimVector() * 60)
 	else
-		// only play the sound for the murderer
-		if CLIENT && LocalPlayer() == self.Owner then
+		-- only play the sound for the murderer
+		if CLIENT and LocalPlayer() == self.Owner then
 			self:EmitSound("Weapon_Crowbar.Single")
 		end
 	end

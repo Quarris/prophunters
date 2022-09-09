@@ -59,7 +59,7 @@ function SWEP:Deploy()
 		self:SetColor(255,255,255,0)
 		if IsValid(self.Owner) then
 			timer.Simple(0,function ()
-				if IsValid(self) && IsValid(self.Owner) then
+				if IsValid(self) and IsValid(self.Owner) then
 					self.Owner:DrawViewModel(false)
 				end
 			end)
@@ -77,7 +77,7 @@ function SWEP:CanPrimaryAttack()
 end
 
 function SWEP:CanPickup(ent)
-	if ent:IsWeapon() || ent:IsPlayer() || ent:IsNPC() then
+	if ent:IsWeapon() or ent:IsPlayer() or ent:IsNPC() then
 		return false
 	end
 	local class = ent:GetClass()
@@ -92,7 +92,7 @@ function SWEP:SecondaryAttack()
 		self:SetCarrying()
 		local tr = self.Owner:GetEyeTraceNoCursor()
 
-		if IsValid(tr.Entity) && self:CanPickup(tr.Entity) then
+		if IsValid(tr.Entity) and self:CanPickup(tr.Entity) then
 			self:SetCarrying(tr.Entity, tr.PhysicsBone)
 			self:ApplyForce()
 		end
@@ -138,7 +138,7 @@ end
 
 function SWEP:Think()
 	local nht = self.HoldType
-	if self.CurHoldType != nht then
+	if self.CurHoldType ~= nht then
 		self.CurHoldType = nht
 		self:SetWeaponHoldType(nht)
 		if SERVER then
@@ -149,11 +149,11 @@ function SWEP:Think()
 		end
 	end
 
-	if IsValid(self.Owner) && self.Owner:KeyDown(IN_ATTACK2) then
+	if IsValid(self.Owner) and self.Owner:KeyDown(IN_ATTACK2) then
 		if IsValid(self.CarryEnt) then
 			self:ApplyForce()
 		end
-	elseif self.CarryEnt != nil then
+	elseif self.CarryEnt ~= nil then
 		self:SetCarrying()
 	end
 end

@@ -4,10 +4,10 @@ Taunts = {}
 TauntCategories = {}
 AllowedTauntSounds = {}
 
-// display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
+-- display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration)
-	if !name || type(name) != "string" then return end
-	if type(snd) != "table" then snd = {tostring(snd)} end
+	if !name or type(name) ~= "string" then return end
+	if type(snd) ~= "table" then snd = {tostring(snd)} end
 	if #snd == 0 then error("No sounds for " .. name) return end
 
 	local t = {}
@@ -15,17 +15,17 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 	t.categories = cats
 	if type(pteam) == "string" then
 		pteam = pteam:lower()
-		if pteam == "prop" || pteam == "props" then
+		if pteam == "prop" or pteam == "props" then
 			t.team = 3
-		elseif pteam == "hunter" || pteam == "hunters" then
+		elseif pteam == "hunter" or pteam == "hunters" then
 			t.team = 2
 		end
 	else
 		t.team = tonumber(pteam)
 	end
-	if sex && #sex > 0 then
+	if sex and #sex > 0 then
 		t.sex = sex
-		if sex == "both" || sex == "nil" then
+		if sex == "both" or sex == "nil" then
 			t.sex = nil
 		end
 	end
@@ -39,7 +39,7 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 		count = count + 1
 
 		if SERVER then
-			// network the taunt
+			-- network the taunt
 			resource.AddFile("sound/" .. v)
 		end
 	end
@@ -62,7 +62,7 @@ end
 local tempG = {}
 tempG.addTaunt = addTaunt
 
-// inherit from _G
+-- inherit from _G
 local meta = {}
 meta.__index = _G
 meta.__newindex = _G

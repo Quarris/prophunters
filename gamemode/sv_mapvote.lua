@@ -1,4 +1,4 @@
-// mapvote
+-- mapvote
 
 util.AddNetworkString("ph_mapvote")
 util.AddNetworkString("ph_mapvotevotes")
@@ -62,7 +62,7 @@ local defaultMapList = {
 
 function GM:SaveMapList()
 
-	// ensure the folders are there
+	-- ensure the folders are there
 	if !file.Exists("prophunters/","DATA") then
 		file.CreateDir("prophunters")
 	end
@@ -124,14 +124,14 @@ function GM:StartMapVote()
 	self.MapVoting = true
 	self.MapVotes = {}
 
-	// randomise the order of maps so people choose different ones
+	-- randomise the order of maps so people choose different ones
 	local maps = {}
 	for k, v in pairs(self.MapList) do
 		table.insert(maps, math.random(#maps) + 1, v)
 	end
 	self.MapList = maps
 
-	// make bots vote for a map
+	-- make bots vote for a map
 	-- for k, ply in pairs(player.GetAll()) do
 	-- 	if ply:IsBot() then
 	-- 		self.MapVotes[ply] = maps[math.random(#maps)]
@@ -148,7 +148,7 @@ function GM:MapVoteThink()
 			self.MapVoting = false
 			local votes = {}
 			for ply, map in pairs(self.MapVotes) do
-				if IsValid(ply) && ply:IsPlayer() then
+				if IsValid(ply) and ply:IsPlayer() then
 					votes[map] = (votes[map] or 0) + 1
 				end
 			end

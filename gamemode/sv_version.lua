@@ -1,5 +1,5 @@
-local url = "https://raw.githubusercontent.com/mechanicalmind/prophunters/master/prophunters.txt"
-local downloadlinks = "https://github.com/mechanicalmind/prophunters/releases or http://steamcommunity.com/sharedfiles/filedetails/?id=260275546"
+local url = "https:--raw.githubusercontent.com/mechanicalmind/prophunters/master/prophunters.txt"
+local downloadlinks = "https:--github.com/mechanicalmind/prophunters/releases or http:--steamcommunity.com/sharedfiles/filedetails/?id=260275546"
 
 
 function GM:CheckForNewVersion(ply)
@@ -10,16 +10,16 @@ function GM:CheckForNewVersion(ply)
 	end
 	req.success = function (code, body, headers)
 		local tab = util.KeyValuesToTable(body)
-		if !tab || !tab.version then
+		if !tab or !tab.version then
 			print("Couldn't parse version file")
 			return
 		end
 		local t = MsgClients()
-		if tab.version != GAMEMODE.Version then
+		if tab.version ~= GAMEMODE.Version then
 			t:Add("Out of date. ", Color(215, 20, 20))
 		end
 		t:Add("Latest version is " .. tab.version, color_white)
-		if tab.version != GAMEMODE.Version then
+		if tab.version ~= GAMEMODE.Version then
 			t:Add(". Current version is " .. tostring(GAMEMODE.Version or "error"))
 			t:Add(". Download the latest version from " .. downloadlinks)
 		else
@@ -32,7 +32,7 @@ function GM:CheckForNewVersion(ply)
 			t:Print()
 			local ct = ChatText(t.msgs)
 			for k, v in pairs(player.GetAll()) do
-				if v:IsListenServerHost() || v:IsSuperAdmin() then
+				if v:IsListenServerHost() or v:IsSuperAdmin() then
 					ct:Send(v)
 				end
 			end
@@ -43,7 +43,7 @@ end
 
 concommand.Add("ph_version", function (ply)
 	local t = MsgClients()
-	t:Add("Prophunters by Mechanical Mind version " .. tostring(GAMEMODE.Version or "error") .. "\n", Color(255, 149, 129))
+	t:Add("Prophunters by Mechanical Mind (Editted by Quarris) version " .. tostring(GAMEMODE.Version or "error") .. "\n", Color(255, 149, 129))
 	if IsValid(ply) then
 		t:Send(ply)
 	else

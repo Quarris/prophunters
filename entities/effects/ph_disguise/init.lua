@@ -22,7 +22,7 @@ function EFFECT:Init( data )
 		particle:SetStartSize( self.Scale * 2 )
 		particle:SetEndSize( self.Scale * 2 )   
 		particle:SetRoll( math.random(0,360) )
-		//particle:SetRollDelta( 0 )
+		--particle:SetRollDelta( 0 )
 		local i = math.random(50, 150)
 		particle:SetColor( i, i, i )
 

@@ -45,7 +45,7 @@ end
 
 function GM:SpectateThink()
 	for k, ply in pairs(player.GetAll()) do
-		if ply:IsCSpectating() && IsValid(ply:GetCSpectatee()) && (!ply.LastSpectatePosSet || ply.LastSpectatePosSet < CurTime()) then
+		if ply:IsCSpectating() and IsValid(ply:GetCSpectatee()) and (!ply.LastSpectatePosSet or ply.LastSpectatePosSet < CurTime()) then
 			ply.LastSpectatePosSet = CurTime() + 0.25
 			ply:SetPos(ply:GetCSpectatee():GetPos())
 		end
@@ -58,9 +58,9 @@ function GM:SpectateNext(ply, direction)
 	local players = {}
 	local index = 1
 	for k, v in pairs(player.GetAll()) do
-		if v != ply then
-			// can only spectate same team and alive
-			if v:Alive() && (v:Team() == ply:Team() || ply:Team() == 1) then
+		if v ~= ply then
+			-- can only spectate same team and alive
+			if v:Alive() and (v:Team() == ply:Team() or ply:Team() == 1) then
 				table.insert(players, v)
 				if v == ply:GetCSpectatee() then
 					index = #players
@@ -79,14 +79,14 @@ function GM:SpectateNext(ply, direction)
 
 		local ent = players[index]
 		if IsValid(ent) then
-			if ent:IsPlayer() && ent:Team() == 2 then
+			if ent:IsPlayer() and ent:Team() == 2 then
 				ply:CSpectate(OBS_MODE_IN_EYE, ent)
 			else
 				ply:CSpectate(OBS_MODE_CHASE, ent)
 			end
 		else
 			if IsValid(ply:GetRagdollEntity()) then
-				if ply:GetCSpectatee() != ply:GetRagdollEntity() then
+				if ply:GetCSpectatee() ~= ply:GetRagdollEntity() then
 					ply:CSpectate(OBS_MODE_CHASE, ply:GetRagdollEntity())
 				end
 			else
@@ -95,7 +95,7 @@ function GM:SpectateNext(ply, direction)
 		end
 	else
 		if IsValid(ply:GetRagdollEntity()) then
-			if ply:GetCSpectatee() != ply:GetRagdollEntity() then
+			if ply:GetCSpectatee() ~= ply:GetRagdollEntity() then
 				ply:CSpectate(OBS_MODE_CHASE, ply:GetRagdollEntity())
 			end
 		else
@@ -106,10 +106,10 @@ end
 
 function GM:ChooseSpectatee(ply) 
 
-	if !ply.SpectateTime || ply.SpectateTime < CurTime() then
+	if !ply.SpectateTime or ply.SpectateTime < CurTime() then
 
 		if ply:KeyPressed(IN_JUMP) then
-			if ply:GetCSpectateMode() != OBS_MODE_ROAMING && (ply:Team() == 1 || self.DeadSpectateRoam:GetBool()) then
+			if ply:GetCSpectateMode() ~= OBS_MODE_ROAMING and (ply:Team() == 1 or self.DeadSpectateRoam:GetBool()) then
 				ply:CSpectate(OBS_MODE_ROAMING)
 			end
 		else
@@ -127,8 +127,8 @@ function GM:ChooseSpectatee(ply)
 		end
 	end
 
-	// if invalid or dead
-	if !IsValid(ply:GetCSpectatee()) && ply:GetCSpectateMode() != OBS_MODE_ROAMING then
+	-- if invalid or dead
+	if !IsValid(ply:GetCSpectatee()) and ply:GetCSpectateMode() ~= OBS_MODE_ROAMING then
 		self:SpectateNext(ply)
 	end
 end

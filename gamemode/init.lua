@@ -2,10 +2,10 @@ AddCSLuaFile("shared.lua")
 
 local rootFolder = (GM or GAMEMODE).Folder:sub(11) .. "/gamemode/"
 
-// add cs lua all the cl_ or sh_ files
+-- add cs lua all the cl_ or sh_ files
 local files, dirs = file.Find(rootFolder .. "*", "LUA")
 for k, v in pairs(files) do
-	if v:sub(1,3) == "cl_" || v:sub(1,3) == "sh_" then
+	if v:sub(1,3) == "cl_" or v:sub(1,3) == "sh_" then
 		AddCSLuaFile(rootFolder .. v)
 	end
 end
@@ -28,6 +28,7 @@ include("sv_bot.lua")
 include("sv_disguise.lua")
 include("sv_teams.lua")
 include("sv_taunt.lua")
+include("sv_weapons.lua")
 include("sv_mapvote.lua")
 include("sv_bannedmodels.lua")
 include("sv_version.lua")
@@ -94,7 +95,7 @@ end
 
 function GM:PlayerNoClip( ply )
 	timer.Simple(0, function () ply:CalculateSpeed() end)
-	return ply:IsSuperAdmin() || ply:GetMoveType() == MOVETYPE_NOCLIP
+	return ply:IsSuperAdmin() or ply:GetMoveType() == MOVETYPE_NOCLIP
 end
 
 function GM:OnEndRound()
@@ -119,9 +120,9 @@ function GM:EntityTakeDamage( ent, dmginfo )
 		end
 		if ent:IsDisguisableAs() then
 			local att = dmginfo:GetAttacker()
-			if IsValid(att) && att:IsPlayer() && att:Team() == 2 then
+			if IsValid(att) and att:IsPlayer() and att:Team() == 2 then
 
-				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) != DMG_CRUSH then					
+				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) ~= DMG_CRUSH then					
 					local tdmg = DamageInfo()
 					tdmg:SetDamage(math.min(dmginfo:GetDamage(), math.max(self.HunterDamagePenalty:GetInt(), 1) ))
 					tdmg:SetDamageType(DMG_AIRBOAT)
@@ -132,7 +133,7 @@ function GM:EntityTakeDamage( ent, dmginfo )
 					tdmg:SetDamageForce(Vector(0, 0, 0))
 					att:TakeDamageInfo(tdmg)
 
-					// increase stat for end of round (Angriest Hunter)
+					-- increase stat for end of round (Angriest Hunter)
 					att.PropDmgPenalty = (att.PropDmgPenalty or 0) + tdmg:GetDamage()
 				end
 			end

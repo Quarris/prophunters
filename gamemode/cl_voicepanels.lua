@@ -119,7 +119,7 @@ local function VoiceClean()
 
 	for k, v in pairs( PlayerVoicePanels ) do
 	
-		if ( !IsValid( k ) || !k:IsPlayer() ) then
+		if ( !IsValid( k ) or !k:IsPlayer() ) then
 			GAMEMODE:PlayerEndVoice( k )
 		end
 	

@@ -7,7 +7,7 @@ net.Receive("kill_feed_add", function (len)
 	local damageType = net.ReadUInt(32)
 	if !IsValid(ply) then return end
 	-- print(ply, attacker, damageType)
-	-- if damageType != 0 then
+	-- if damageType ~= 0 then
 	-- 	local i = 1
 	-- 	for c = 1, 30 do
 	-- 		i = i * 2
@@ -60,7 +60,7 @@ net.Receive("kill_feed_add", function (len)
 			"killed themself"
 		})
 	end
-	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
+	if IsValid(attacker) and attacker:IsPlayer() and attacker ~= ply then
 		t.attackerName = attacker:Nick()
 		local col = attacker:GetPlayerColor()
 		t.attackerColor = Color(col.x * 255, col.y * 255, col.z * 255)

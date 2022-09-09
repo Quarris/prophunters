@@ -25,7 +25,7 @@ net.Receive("gamestate", function (len)
 		GAMEMODE.UpgradesNotif = {}
 		GAMEMODE.KillFeed = {}
 
-		-- // siren sound
+		-- -- siren sound
 		-- if IsValid(LocalPlayer()) then
 		-- 	GAMEMODE.StartSiren = CreateSound(LocalPlayer(), "ambient/alarms/siren.wav")
 		-- 	GAMEMODE.StartSiren:Play()
@@ -33,13 +33,13 @@ net.Receive("gamestate", function (len)
 		-- end
 	elseif GAMEMODE.GameState == 2 then
 
-		// end siren on start round
+		-- end siren on start round
 		-- if GAMEMODE.StartSiren then
 		-- 	GAMEMODE.StartSiren:FadeOut(0.3)
 		-- end
 	end
 
-	if GAMEMODE.GameState != 2 then
+	if GAMEMODE.GameState ~= 2 then
 		GAMEMODE:CloseEndRoundMenu()
 	end
 end)
@@ -47,12 +47,12 @@ end)
 net.Receive("round_victor", function (len)
 	local tab = {}
 	tab.reason = net.ReadUInt(8)
-	if tab.reason == 2 || tab.reason == 3 then
+	if tab.reason == 2 or tab.reason == 3 then
 		tab.winningTeam = net.ReadUInt(16)
 	end
 	
 	tab.playerAwards = {}
-	while net.ReadUInt(8) != 0 do
+	while net.ReadUInt(8) ~= 0 do
 		local k = net.ReadString()
 		local v = net.ReadEntity()
 		local col = net.ReadVector()
@@ -64,7 +64,7 @@ net.Receive("round_victor", function (len)
 		}
 	end
 
-	// open the results panel
+	-- open the results panel
 	timer.Simple(2, function ()
 		GAMEMODE:EndRoundMenuResults(tab)
 	end)
@@ -77,7 +77,7 @@ end
 net.Receive("gamerules", function ()
 
 	local settings = {}
-	while net.ReadUInt(8) != 0 do
+	while net.ReadUInt(8) ~= 0 do
 		local k = net.ReadString()
 		local t = net.ReadUInt(8)
 		local v = net.ReadType(t)

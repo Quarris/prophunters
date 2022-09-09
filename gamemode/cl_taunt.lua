@@ -23,11 +23,11 @@ local function fillList(mlist, taunts, cat)
 	end
 	mlist:Clear()
 	for k, t in pairs(taunts) do
-		if t.sex && t.sex != GAMEMODE.PlayerModelSex then
-			continue
+		if t.sex and t.sex ~= GAMEMODE.PlayerModelSex then
+			goto continue
 		end
-		if t.team && LocalPlayer():Team() != t.team then
-			continue
+		if t.team and LocalPlayer():Team() ~= t.team then
+			goto continue
 		end
 		local but = vgui.Create("DButton")
 		but:SetTall(draw.GetFontHeight("RobotoHUD-L15") * 1.0)
@@ -47,6 +47,7 @@ local function fillList(mlist, taunts, cat)
 			menu:Close()
 		end
 		mlist:AddItem(but)
+		::continue::
 	end
 end
 
@@ -92,10 +93,11 @@ local function fillCats(clist, mlist)
 	for k, taunts in pairs(TauntCategories) do
 		local c = 0
 		for a, t in pairs(taunts) do
-			if t.team && LocalPlayer():Team() != t.team then
-				continue
+			if t.team and LocalPlayer():Team() ~= t.team then
+				goto continue
 			end
 			c = c + 1
+			::continue::
 		end
 		if c > 0 then
 			addCat(clist, k, taunts, mlist)
@@ -198,7 +200,7 @@ local function openTauntMenu()
 		surface.DrawRect(1, 1, w - 2, h - 2)
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(8, 8, 8, 8)
 	function canvas:OnChildAdded( child )

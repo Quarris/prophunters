@@ -1,4 +1,4 @@
-if GAMEMODE && IsValid(GAMEMODE.ScoreboardPanel) then
+if GAMEMODE and IsValid(GAMEMODE.ScoreboardPanel) then
 	GAMEMODE.ScoreboardPanel:Remove()
 end
 
@@ -35,7 +35,7 @@ local function addPlayerItem(self, mlist, ply, pteam)
 		surface.SetDrawColor(color_black)
 		-- surface.DrawOutlinedRect(0, 0, w, h)
 
-		if IsValid(ply) && ply:IsPlayer() then
+		if IsValid(ply) and ply:IsPlayer() then
 			local s = 4
 
 			if !ply:Alive() then
@@ -48,11 +48,11 @@ local function addPlayerItem(self, mlist, ply, pteam)
 			if ply:IsMuted() then
 				surface.SetMaterial(muted)
 
-				// draw shadow
+				-- draw shadow
 				-- surface.SetDrawColor(color_black)
 				-- surface.DrawTexturedRect(s + 1, h / 2 - 16 + 1, 32, 32)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(150, 150, 150, 255)
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
 				s = s + 32 + 4
@@ -93,12 +93,12 @@ local function doPlayerItems(self, mlist, pteam)
 	local del = false
 
 	for t,v in pairs(mlist:GetCanvas():GetChildren()) do
-		if !v.perm && v.ctime != CurTime() then
+		if !v.perm and v.ctime ~= CurTime() then
 			v:Remove()
 			del = true
 		end
 	end
-	// make sure the rest of the elements are moved up
+	-- make sure the rest of the elements are moved up
 	if del then
 		timer.Simple(0, function() mlist:GetCanvas():InvalidateLayout() end)
 	end
@@ -124,7 +124,7 @@ local function makeTeamList(parent, pteam)
 	end
 
 	function pnl:Think()
-		if !self.RefreshWait || self.RefreshWait < CurTime() then
+		if !self.RefreshWait or self.RefreshWait < CurTime() then
 			self.RefreshWait = CurTime() + 0.1
 			doPlayerItems(self, mlist, pteam)
 
@@ -182,7 +182,7 @@ local function makeTeamList(parent, pteam)
 		
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(8, 8, 8, 8)
 	function canvas:OnChildAdded( child )
@@ -249,7 +249,7 @@ function GM:ScoreboardShow()
 			local tw,th = surface.GetTextSize(t)
 			draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
 
-			draw.ShadowText("by Mechanical Mind, version " .. tostring(GAMEMODE.Version or "error"), "RobotoHUD-L15", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
+			draw.ShadowText("by Mechanical Mind (Editted by Quarris), version " .. tostring(GAMEMODE.Version or "error"), "RobotoHUD-L15", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
 		end
 
 		function menu.Credits:PerformLayout()
@@ -340,7 +340,7 @@ function GM:DoScoreboardActionPopup(ply)
 		admin:SetIcon("icon16/shield.png")
 	end
 
-	if ply != LocalPlayer() then
+	if ply ~= LocalPlayer() then
 		local t = "Mute"
 		if ply:IsMuted() then
 			t = "Unmute"
@@ -354,7 +354,7 @@ function GM:DoScoreboardActionPopup(ply)
 		end
 	end
 	
-	if IsValid(LocalPlayer()) && LocalPlayer():IsAdmin() then
+	if IsValid(LocalPlayer()) and LocalPlayer():IsAdmin() then
 		actions:AddSpacer()
 
 		if ply:Team() == 2 then

@@ -1,4 +1,4 @@
-if GAMEMODE && IsValid(GAMEMODE.EndRoundPanel) then
+if GAMEMODE and IsValid(GAMEMODE.EndRoundPanel) then
 	GAMEMODE.EndRoundPanel:Remove()
 end
 
@@ -20,7 +20,7 @@ local function addPlayerItem(self, mlist, ply)
 		surface.SetDrawColor(color_black)
 		-- surface.DrawOutlinedRect(0, 0, w, h)
 
-		if IsValid(ply) && ply:IsPlayer() then
+		if IsValid(ply) and ply:IsPlayer() then
 			local col = team.GetColor(ply:Team())
 			if self.Hovered then
 				surface.SetDrawColor(col.r, col.g, col.b, 20)
@@ -36,7 +36,7 @@ local function addPlayerItem(self, mlist, ply)
 				local x, y = self:LocalToScreen(0, 0)
 				render.SetScissorRect(x, y, x + s + 32 * (0.5 + v / 2), y + h, true)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(255, 255, 255, 255)
 				-- surface.SetDrawColor(255, 255, 255, 255 * math.Clamp(v, 0.1, 1))
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
@@ -48,7 +48,7 @@ local function addPlayerItem(self, mlist, ply)
 			if ply:IsMuted() then
 				surface.SetMaterial(muted)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(150, 150, 150, 255)
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
 				s = s + 32 + 4
@@ -90,13 +90,13 @@ local function doPlayerItems(self, mlist)
 	local del = false
 
 	for t,v in pairs(mlist:GetCanvas():GetChildren()) do
-		if !v.perm && v.ctime != CurTime() then
+		if !v.perm and v.ctime ~= CurTime() then
 			v:Remove()
 			del = true
 		end
 	end
-	// make sure the rest of the elements are sorted and moved up to fill gaps
-	if del || add then
+	-- make sure the rest of the elements are sorted and moved up to fill gaps
+	if del or add then
 		timer.Simple(0, function() 
 			local childs = mlist:GetCanvas():GetChildren()
 			table.sort(childs, function (a, b)
@@ -174,7 +174,7 @@ function GM:OpenEndRoundMenu()
 	function leftpnl:Paint(w, h)
 	end
 
-	// player list section
+	-- player list section
 	local listpnl = vgui.Create("DPanel", leftpnl)
 	listpnl:Dock(FILL)
 	function listpnl:Paint(w, h)
@@ -198,14 +198,14 @@ function GM:OpenEndRoundMenu()
 	end
 
 	function plist:Think()
-		if !self.RefreshWait || self.RefreshWait < CurTime() then
+		if !self.RefreshWait or self.RefreshWait < CurTime() then
 			self.RefreshWait = CurTime() + 0.1
 			doPlayerItems(self, plist)
 
 		end
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = plist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
 	function canvas:OnChildAdded( child )
@@ -213,7 +213,7 @@ function GM:OpenEndRoundMenu()
 		child:DockMargin(0, 0, 0, 1)
 	end
 
-	// chat section
+	-- chat section
 	local pnl = vgui.Create("DPanel", leftpnl)
 	pnl:Dock(BOTTOM)
 	pnl:DockMargin(0, 20, 0, 0)
@@ -292,7 +292,7 @@ function GM:OpenEndRoundMenu()
 	function mlist:Paint(w, h)
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
 	function canvas:OnChildAdded( child )
@@ -311,12 +311,12 @@ function GM:OpenEndRoundMenu()
 
 		self:InvalidateLayout()
 		
-		if self:GetScroll() == oldSize || (oldSize == 1 && self:GetScroll() == 0) then
+		if self:GetScroll() == oldSize or (oldSize == 1 and self:GetScroll() == 0) then
 			self:SetScroll(self.CanvasSize) 
 		end
 	end
 
-	// results section
+	-- results section
 	local respnl = vgui.Create("DPanel", menu)
 	menu.ResultsPanel = respnl
 	respnl:Dock(FILL)
@@ -371,7 +371,7 @@ function GM:OpenEndRoundMenu()
 		child:DockMargin(0, 0, 0, 16)
 	end
 
-	// map vote
+	-- map vote
 	local votepnl = vgui.Create("DPanel", menu)
 	votepnl:SetVisible(false)
 	menu.VotePanel = votepnl
@@ -463,7 +463,7 @@ function GM:EndRoundMenuResults(res)
 	menu.Results = res
 	menu.ChatList:Clear()
 	menu.ResultList:Clear()
-	if res.reason == 2 || res.reason == 3 then
+	if res.reason == 2 or res.reason == 3 then
 		menu.WinningTeam:SetText(team.GetName(res.reason) .. " win!")
 		menu.WinningTeam:SetColor(team.GetColor(res.reason))
 	else
@@ -471,7 +471,7 @@ function GM:EndRoundMenuResults(res)
 		menu.WinningTeam:SetColor(Color(150, 150, 150))
 	end
 
-	//randomise award order, preserve keys
+	--randomise award order, preserve keys
 	local random = {}
 	for k, award in pairs(awards) do
 		table.insert(random, math.random(#random) + 1, {k, award})
@@ -563,7 +563,7 @@ function GM:EndRoundMapVote()
 
 			local i = 0
 			for ply, map2 in pairs(GAMEMODE.MapVotes) do
-				if IsValid(ply) && map2 == map then
+				if IsValid(ply) and map2 == map then
 					draw.SimpleText(ply:Nick(), "RobotoHUD-L15", w, i * fg2 - self.VotesScroll, gray, 2)
 					i = i + 1
 				end
