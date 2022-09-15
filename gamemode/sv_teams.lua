@@ -105,3 +105,25 @@ function GM:SwapTeams()
 	ct:Add("Teams have been swapped", Color(50, 220, 150))
 	ct:SendAll()
 end
+
+function GM:RandomizeTeams()
+	math.randomseed(os.time())
+	shuffled = {}
+	for i, v in ipairs(player.GetAll()) do
+		local pos = math.random(1, #shuffled+1)
+		table.insert(shuffled, pos, v)
+	end
+
+	local isProp = true
+	for k, ply in pairs(shuffled) do
+		if isProp then
+			ply:SetTeam(3)
+		else
+			ply:SetTeam(2)
+		end
+		isProp = not isProp
+	end
+	local ct = ChatText()
+	ct:Add("Teams have been randomized", Color(50, 220, 150))
+	ct:SendAll()
+end

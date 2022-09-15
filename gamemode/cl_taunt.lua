@@ -24,10 +24,10 @@ local function fillList(mlist, taunts, cat)
 	mlist:Clear()
 	for k, t in pairs(taunts) do
 		if t.sex and t.sex ~= GAMEMODE.PlayerModelSex then
-			goto continue
+			continue
 		end
 		if t.team and LocalPlayer():Team() ~= t.team then
-			goto continue
+			continue
 		end
 		local but = vgui.Create("DButton")
 		but:SetTall(draw.GetFontHeight("RobotoHUD-L15") * 1.0)
@@ -47,7 +47,6 @@ local function fillList(mlist, taunts, cat)
 			menu:Close()
 		end
 		mlist:AddItem(but)
-		::continue::
 	end
 end
 
@@ -94,10 +93,9 @@ local function fillCats(clist, mlist)
 		local c = 0
 		for a, t in pairs(taunts) do
 			if t.team and LocalPlayer():Team() ~= t.team then
-				goto continue
+				continue
 			end
 			c = c + 1
-			::continue::
 		end
 		if c > 0 then
 			addCat(clist, k, taunts, mlist)

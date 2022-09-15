@@ -140,8 +140,13 @@ function GM:StartRound()
 		end
 	end
 
+	local timeOverride = self.RoundTimeOverride:GetFloat()
 	self.RoundSettings = {}
-	self.RoundSettings.RoundTime = math.Round((c * 0.5 / hunters + 60 * 4)  * math.sqrt(props / hunters))
+	if timeOverride == -1 then
+		self.RoundSettings.RoundTime = math.Round((c * 0.5 / hunters + 60 * 4)  * math.sqrt(props / hunters))
+	else
+		self.RoundSettings.RoundTime = timeOverride
+	end
 	self.RoundSettings.PropsCamDistance = self.PropsCamDistance:GetFloat()
 	print("Round time is " .. (self.RoundSettings.RoundTime / 60) .. " (" .. c .. " props)")
 
@@ -337,7 +342,7 @@ function GM:RoundsThink()
 			self:SetupRound()
 		end
 	elseif self:GetGameState() == 1 then
-		if self:GetStateRunningTime() > 30 then
+		if self:GetStateRunningTime() > self.HideTimer:GetFloat() then
 			self:StartRound()
 		end
 	elseif self:GetGameState() == 2 then
@@ -354,7 +359,11 @@ function GM:RoundsThink()
 				self:StartMapVote()
 			else
 				if self.LastRoundResult ~= 3 or !self.PropsWinStayProps:GetBool() then
-					self:SwapTeams()
+					if self.RandomTeams:GetBool() then
+						self:RandomizeTeams()
+					else
+						self:SwapTeams()
+					end
 				end
 				self:SetupRound()
 			end

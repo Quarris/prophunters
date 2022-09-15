@@ -19,6 +19,9 @@ include("cl_wraptext.lua")
 include("cl_mapvote.lua")
 include("cl_bannedmodels.lua")
 
+
+GM.HideTimer = CreateClientConVar("ph_props_hidetimer", 30, false, false, "How many seconds the props have to hide" )
+
 function GM:Initialize() 
 end
 

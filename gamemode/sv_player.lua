@@ -157,7 +157,7 @@ function GM:PlayerLoadout(ply)
 	end
 end
 
-function addWeapon(ply, wpn, ammo_tp, ammo_amt) 
+function addWeapon(ply, wpn, ammo_tp, ammo_amt)
    ply:Give(wpn)
    if ammo_tp ~= nil then
        ply:GiveAmmo(ammo_amt, ammo_tp)

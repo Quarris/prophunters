@@ -20,7 +20,6 @@ setmetatable(tempG, meta)
 function loadWeapons(rootFolder)
 	local files, dirs = file.Find(rootFolder .. "*.lua", "LUA")
 	for k, v in pairs(files) do
-		--AddCSLuaFile(rootFolder .. v)
 
 		local name = v:sub(1, -5)
 		local f = CompileFile(rootFolder .. v)
@@ -43,7 +42,6 @@ end
 
 function applyWeapons(ply)
 	for i, weapon in ipairs(Weapons) do
-		print(weapon.name)
 		ply:Give(weapon.name)
 		if weapon.ammo_type ~= nil then
 			ply:GiveAmmo(weapon.ammo_amount, weapon.ammo_type)
